@@ -1,0 +1,240 @@
+---
+title: "Visualisasi data Numerik"
+author: "Patricia Pingkan Kumenap"
+date: "2025-03-15"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+## HISTOGRAM 
+Untuk membuat histogram, data yang dipilih adalah data "gapminder". Data ini merupakan bagian dari dataset yang bersumber dari packages R Studio dengan judul Packages "gapminder". Untuk itu terlebih dahulu melakukan install.packages "gapminder" pada R Studio. Secara keseluruhan dataset gapminder ini membahas mengenai informasi tentang perkembangan ekonomi dan kesehatan dari berbagai negara di dunia selama beberapa dekade. Packages Dataset ini  pertama kali dibuat oleh Jenny Bryan. Sumber data aslinya dikumpulkan oleh Gapminder Foundation.
+Dataset "gapminder" ini juga terdiri dari 6 variabel utama yang meliputi : 
+- variabel country dengan tipe data faktor 
+- variabel continent dengan tipe data faktor 
+- variabel year dengan tipe data integer 
+- variabel lifeExp dengan tipe data numerik
+- variabel pop dengan tipe data numerik
+- variabel gdpPercap dengan tipe data numerik
+
+Untuk membuat histogram pada package {ggplot2} menggunakan perintah `geom_histogram()`. Variable yang digunakan yaitu lifeExp pada data gapminder.
+
+```{r, echo=TRUE}
+library(gapminder)
+library(ggplot2)
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram()
+```
+
+Secara defaut, `geom_histogram()` menggunakan 30 bins (batang).
+Selanjutnya mengganti nilai bins tersebut dengan menambahkan argumen bins = 50. Hasilnya sebagai berikut.
+
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram(bins=50)
+```
+
+Kita dapat memberikan pemisah dengan warna putih Anda dapat tambahkan argumen `color = "yellow"`. Hasilnya sebagai berikut.
+
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram(bins=50, color="yellow")
+```
+
+Kita dapat mengubah warna batang dengan menggunakan argumen `fill`, mengubah format penulisan nilai pada sumbu x dan y menggunakan function `scale_x_continuous()` untuk sumbu x dan `scale_y_continuous()` untuk sumbu y dan mengubah nama label pada sumbu x dan y dengan fungsi `labs`. Hasilnya sebagai berikut.
+
+```{r, echo=TRUE}
+library(scales)
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_histogram(bins = 30, color = "blue", fill = "pink") + 
+  scale_x_continuous(labels = comma) + 
+  scale_y_continuous(labels = comma) + 
+  labs(x = "Rata-rata harapan hidup saat lahir (dalam tahun)", 
+       y = "Frekuensi")
+```
+
+## DENSITY PLOT SEDERHANA 
+Pada dasarnya density tidak bisa melihat outlier, untuk itu identifikasi outlier dapat menggunakan histogram dan Untuk membuat density plot menggunakan ggplot2 kita cukup menggunakan function geom_density()
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_density()
+```
+
+Untuk mengatur warna, transaparansi, format penulisan nilai pada sumbu x dan y, dan labeling sumbu x sama seperti pembuatan Histogram. Hasilnya sebagai berikut.
+
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_density(fill = "pink", alpha = 0.9) + 
+  scale_x_continuous(labels = comma) + 
+  scale_y_continuous(labels = comma) + 
+  labs(x = "Rata-rata harapan hidup saat lahir (dalam tahun)")
+```
+
+Kita dapat membandingkan sebaran menggunakan **density plot** berdasarkan kategori. Misal akan dilihat sebaran rata-rata hidup saat lahir berdasarkan kategori continent. Hasilnya sebagai berikut.
+
+```{r, echo=TRUE}
+library(ggplot2)
+library(scales)  
+
+ggplot(data = gapminder, mapping = aes(x = lifeExp, fill = continent)) + 
+  geom_density(alpha = 0.7, color="black") + 
+  scale_x_continuous(labels = comma) + 
+  scale_y_continuous(labels = comma) + 
+  labs(
+    title = "Distribusi Rata-rata harapan hidup saat lahir (dalam tahun) berdasarkan Negara",
+    x = "Rata-rata harapan hidup saat lahir (dalam tahun)",
+    y = "Density") + 
+  theme_minimal()
+```
+
+Untuk mengurangi kesulitan dalam mengamati visual tersebut maka perlu dipisah per kategori dengan menggunakan visualisasi **ridgeline plot** atau disebut juga **joyplot**. 
+
+```{r, echo=TRUE}
+library(ggridges)
+ggplot(data = gapminder, mapping = aes(x = lifeExp, y=continent,fill = continent)) + 
+  geom_density_ridges() + 
+  labs(x = "Rata-rata harapan hidup saat lahir (dalam tahun)", y = "Kategori continent")
+```
+
+## BOXPLOT
+Untuk membuat **boxplot** di ggplot2 kita dapat gunakan function `geom_boxplot()`
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_boxplot()
+```
+
+Membuat boxplot secara vertikal menggunakan perintah `coord_flip()`. Hasilnya sebagai berikut.
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp)) + 
+  geom_boxplot()+
+  coord_flip()
+```
+
+kita dapat membuat boxplot dari data numerik dan membandingkan sebarannya berdasarkan kategori. Misalnya kita ingin membandingkan sebaran rata rata hidup saat lahir berdasarkan kategori kelas continent nya Hasilnya sebagai berikut.
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp, y = continent)) + 
+  geom_boxplot()
+```
+semakin panjang maka akan semakin beragam variasinya
+Selanjutnya memberi warna berbeda untuk setiap box berdasarkan kategorinya. Kita dapat menambahkan argumen `fill` dengan nilai berupa nama variabel dari kategori yang ingin kita gunakan untuk perbandingan boxplot. Misalnya kita ingin membandingkan sebaran dari rata rata hidup saat lahir (lifeExp) berdasarkan kategori continent  menggunakan **boxplot** dan menyesuaikan warnanya berdasarkan kategori dari *color*. Hasilnya sebagai berikut.
+
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp, y = continent, fill = continent)) + 
+  geom_boxplot()
+```
+
+Untuk menghilangkan legend dari color kita dapat tambahkan theme(legend.position = "none").Hasilnya sebagai berikut.
+
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp, y = continent, fill = continent)) + 
+  geom_boxplot() + 
+  theme(legend.position = "none")
+```
+
+## VIOLIN PLOT 
+Plot ini dibentuk dengan menggabungkan antara **Density Plot** dengan **boxplot**. Hasilnya sebagai berikut.
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = lifeExp ,y="all")) +
+  geom_violin(fill="green",alpha=0.6) +
+  geom_boxplot(fill="pink",width=0.3)+
+   scale_x_continuous(labels = comma)
+```
+y=all : harus ada y nya 
+
+## QQ-PLOT
+Plot ini berguna untuk memeriksa apakah sebaran data (sebaran empirik) memiliki bentuk yang sama dengan sebaran tertentu yang dispesifikan (sebaran hipotetik). Misalnya kita ingin melihat pola sebaran rata-rata hidup saat lahir (lifeExp) apakah menyebar normal atau tidak.
+
+```{r, echo=TRUE}
+ggplot(data = gapminder, aes(sample = lifeExp)) +
+  stat_qq(col="skyblue", cex=0.9) +
+  stat_qq_line(col="green", lwd=1)
+```
+stat_qq_line : apakah menyebar normal atau tidak
+Jika datanya berhimpit atau mengikuti garis maka akan menyerupai sebaran normal 
+
+## SCATTER PLOT
+Untuk membuat scatter plot menggunakan `ggplot2` kita dapat menggunakan `geom_point()`. Misalnya kita ingin melihat pola sebaran antara gdpPercap dengan lifeExp
+
+```{r, echo=TRUE}
+library(ggplot2)
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point() 
+```
+Kita juga dapat memberikan warna untuk setiap titik. Misalnya warna masing-masing titik menyesuaikan dengan kategori pada variabel continent
+
+```{r, echo=TRUE}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp, color = continent)) + 
+  geom_point()
+```
+
+## LINE CHART 
+Plot ini digunakan untuk melihat trend data berdasarkan perubahan waktu. Artinya pada **Line Chart** cocok untuk data-data deret waktu.
+
+### Input Data
+Data yang digunakan yaitu data Pasar Saham Amerika Serikat dan Indikator Teknisnya.Adapun dataset ini bersumber dari website kaggle. 
+```{r, echo=TRUE}
+saham_AS <- read.csv("C:/Users/Fanndry/Documents/AAPL.csv",sep = ",")
+saham_AS$Date <- as.Date(saham_AS$Date, format = "%Y-%m-%d")
+head(saham_AS$Date)
+str(saham_AS)
+```
+
+### Line chart Dasar
+Di line chart sumbu x nya harus date
+```{r, echo=TRUE}
+library(ggplot2)
+
+ggplot(data = saham_AS, aes(x = Date, y = High)) +
+  geom_line() +
+  labs(
+    title = "Pergerakan Harga Tertinggi Saham",
+    x = "Tanggal",
+    y = "Harga Tertinggi") 
+
+```
+
+### Area Plot
+Untuk menambah estetika dapat dilakukan dengan mengarsir daerah di bawah plot deret waktu. Plot seperti ini disebut **Area Plot**. Hasilnya sebagai berikut.
+```{r, echo=TRUE}
+ggplot(data = saham_AS, aes(x=Date,y=High)) +
+  geom_line(lwd=1.2, col="green") +
+  geom_area(fill="skyblue", alpha=0.3)
+  labs(x="tanggal", y="Harga Tertinggi")
+```
+
+### Multiple Line Chart
+Pada plot ini dapat digunakan untuk membandingkan dan mengidentifikasi tren jangka pendek dan jangka panjang serta memberikan sinyal trading. MA50 merupakan rata-rata pergerakan harga saham selama 50 hari terakhir. Sedangkan MA200 merupakan pergerakan harga jangka panjang (lebih stabil dan menggambarkan tren keseluruhan). 
+```{r, echo=TRUE}
+ggplot(data = saham_AS, aes(x=Date)) +
+  geom_line(aes(y=MA50), lwd=1.2, col="blue") +
+  geom_line(aes(y=MA200), lwd=1.2, col="red") +
+  labs(x="tanggal", x="Perkiraan Rata-Rata Pergerakan Harga Saham") 
+```
+
+Untuk menambahkan nama kelompok digunakan perintah berikut.
+```{r, echo=TRUE}
+library(ggplot2)
+
+ggplot(data = saham_AS, aes(x = Date)) +
+  geom_line(aes(y = MA50), lwd = 1.2, col = "purple") +
+  geom_line(aes(y = MA200), lwd = 1.2, col = "blue") +
+  labs(
+    x = "Tanggal",
+    y = "Moving Average",
+    title = "Perbandingan MA50 dan MA200"
+  ) +
+  theme_minimal() +  # Tema lebih bersih
+  theme(
+    plot.title = element_text(hjust = 0.5),  # Pusatkan judul
+    axis.text.x = element_text(angle = 45, hjust = 1),  # Miringkan label sumbu X
+    plot.margin = margin(10, 20, 30, 10)  # Tambahkan margin lebih besar
+  ) +
+  coord_cartesian(clip = "off") +  # Pastikan teks tidak terpotong
+  expand_limits(y = max(saham_AS$MA50, saham_AS$MA200) * 1.2) +  # Tambah ruang lebih besar
+  annotate("text", x = max(saham_AS$Date), y = max(saham_AS$MA50) * 1.15,
+           label = "MA50", color = "purple", size = 5, fontface = "bold", hjust = -0.1) +
+  annotate("text", x = max(saham_AS$Date), y = max(saham_AS$MA200) * 1.15,
+           label = "MA200", color = "blue", size = 5, fontface = "bold", hjust = -0.1)
+
+
+```

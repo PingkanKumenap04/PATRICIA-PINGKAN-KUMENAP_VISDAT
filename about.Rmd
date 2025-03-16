@@ -1,0 +1,18 @@
+---
+title: "Tentang Website Ini"
+output:
+  html_document: 
+---
+
+# Selamat Datang di Eksplorasi dan Visualisasi Data 🎨📊
+
+![](https://dibimbing-cdn.sgp1.cdn.digitaloceanspaces.com/1685633396018-Jenis%20Visualisasi%20Data%20Dan%20Fungsinya%20yang%20Wajib%20Kamu%20Tahu.jpg.webp)
+
+Website ini dibuat untuk membantu dalam **eksplorasi dan visualisasi data** dengan pendekatan yang menarik dan interaktif. 
+
+*"Data adalah cerita yang menunggu untuk diceritakan dengan visualisasi yang tepat."*
+
+Terima kasih telah mengunjungi!  Jangan ragu untuk menjelajahi lebih lanjut.
+
+---
+© 2025, Dibuat dengan `RMarkdown`
